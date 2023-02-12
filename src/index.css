@@ -126,7 +126,7 @@ header h1 {
 }
 
 .formulario input[type="submit"]:hover {
-    background-color: #042a67;
+    background-color: #115c0a;
     cursor: pointer;
 }
 
@@ -272,6 +272,7 @@ main {
 .listado-gastos h2 {
     color: var(--gris-oscuro);
     font-weight: 900;
+    text-align: center;
 }
 .no-gastos {
     text-align: center;
@@ -400,13 +401,13 @@ body .modal {
 
 /*** SWIPE LIST OVERRIDES **/
 .swipe-action__leading {
-    background-color: var(--azul);
+    background-color: rgb(11, 151, 11);
     color: var(--blanco);
     margin-bottom: 2rem;
 }
 
 .swipe-action__trailing {
-    background-color: #db2777;
+    background-color: #da2020;
     margin-bottom: 2rem;
     color: var(--blanco);
 }

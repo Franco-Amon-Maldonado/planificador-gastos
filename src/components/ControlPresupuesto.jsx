@@ -1,30 +1,70 @@
+import { useEffect, useState } from "react"
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css"
 
 
-const ControlPresupuesto = ({presupuesto, setPresupuesto}) =>{
+const ControlPresupuesto = ({presupuesto, gastos}) =>{
+   const [disponible, setDisponible] = useState(0);
+   const [gastado, setGastado] = useState(0);
+   const [porcentaje,setPorcentaje] = useState(0);
+
+    //Escucha por los cambios que sucedan en gastos
+    useEffect(() =>{
+        const totalGastado = gastos.reduce((total,gasto)=>{
+            return gasto.cantidad + total
+        },0)
+
+        const totalDisponible = presupuesto - totalGastado
+
+        const nuevoPorcentaje = ((presupuesto-totalDisponible)/presupuesto) * 100
+        setDisponible(totalDisponible)
+        setGastado(totalGastado)
+        
+
+        setTimeout(()=>{
+            setPorcentaje(nuevoPorcentaje)
+        },1000)
+
+    }, [gastos])
+
 
     const formatearCantidad = (cantidad)=>{
-       var formatter = new Intl.NumberFormat('es-ar', {
+        var formatter = new Intl.NumberFormat('es-ar', {
         
-        style: 'currency',
-        currency: 'ARS',
-        minimumFractionDigits: 2
+            style: 'currency',
+                currency: 'ARS',
+            minimumFractionDigits: 2
       
       })
 
       return formatter.format(cantidad)
     }
 
-    const cantidadDisponible = (cantidad) =>{
-
-
-
+    const colorProgressBar = (porcentajeColor) =>{
+        if (porcentajeColor < 30) {
+            return '#83bc4c';
+          } else if (porcentajeColor >= 30 && porcentajeColor < 60) {
+            return '#faa31a';
+          } else {
+            return "#ba3d3d";
+          }
     }
+
+
 
     return (
 
         <div className="contenedor-presupuesto contenedor sombra dos-columnas">
             <div>
-                <p>Grafica</p>
+                <p>{<CircularProgressbar 
+                        text={porcentaje >= 100 ? 'Sin presupuesto' : `Gastado ${porcentaje}%`}
+                        styles={buildStyles({
+                            pathColor:colorProgressBar(porcentaje),
+                              
+                        })}
+                        value={porcentaje}/>}
+                
+                </p>
             </div>
 
             <div className="contenido-presupuesto">
@@ -33,11 +73,11 @@ const ControlPresupuesto = ({presupuesto, setPresupuesto}) =>{
                 </p>
 
                 <p>
-                    <span>Disponible:</span> {formatearCantidad(0)}
+                    <span>Disponible:</span> {formatearCantidad(disponible)}
                 </p>
 
                 <p>
-                    <span>Gastado:</span> {formatearCantidad(0)}
+                    <span>Gastado:</span> {formatearCantidad(gastado)}
                 </p>
             </div>
         </div>

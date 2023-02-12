@@ -1,19 +1,30 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import CerrarModal from '../img/cerrar.svg'
 import Mensaje from './Mensaje'
 
 
 
-const Modal = ({setModal,animarModal, setAnimarModal,guardarGastos}) =>{
+const Modal = ({setModal,animarModal, setAnimarModal,guardarGasto, gastoEditar,setGastoEditar}) =>{
 const [nombre, setNombre] = useState('')
 const [cantidad, setCantidad] = useState('')
 const [categoria, setCategoria] = useState('')
 const [mensaje,setMensaje] = useState('')
+const [id, setId] = useState('')
+const [fecha, setFecha] = useState('')
 
-
+useEffect(()=>{
+    if(Object.keys(gastoEditar).length > 0){
+        setNombre(gastoEditar.nombre)
+        setCantidad(gastoEditar.cantidad)
+        setCategoria(gastoEditar.categoria)
+        setId(gastoEditar.id)
+        setFecha(gastoEditar.fecha)
+      }
+},[])
 
 const ocultarModal = () =>{
     setAnimarModal(false)
+    setGastoEditar({})
 
     setTimeout(()=>{
         setModal(false)
@@ -32,7 +43,7 @@ const handleSubmit =(e)=>{
     }
 
     //Creo el objeto para luego guardarlo como un nuevo gasto
-    guardarGastos({id:uuid.v4(),nombre,cantidad,categoria})
+    guardarGasto({id,nombre,cantidad,categoria,fecha})
 }
 
     return(
@@ -43,7 +54,7 @@ const handleSubmit =(e)=>{
             </div>
 
             <form  onSubmit={handleSubmit} className={`formulario ${animarModal ? "animar" : 'cerrar'}`}>
-                <legend>Nuevo gasto</legend>
+                <legend>{gastoEditar.nombre ? 'Editar gasto' : 'Nuevo gasto'}</legend>
                 
                 <div className='campo'>
                     <label htmlFor="Nombre">Nombre Gasto</label>
@@ -61,7 +72,7 @@ const handleSubmit =(e)=>{
                     <label htmlFor="Nombre">Cantidad</label>
                     <input
                     id='cantidad' 
-                    type="number" 
+                    type="text" 
                     placeholder='Añadir la cantidad'
                     value = {cantidad}
                     onChange = {e => setCantidad(Number(e.target.value))}
@@ -74,9 +85,10 @@ const handleSubmit =(e)=>{
                    
                     <select name="" id="categoria" value={categoria} onChange={e =>{setCategoria(e.target.value)}}>
                         <option value="">--Seleccione--</option>
+                        <option value="Ahorro">--Ahorro--</option>
                         <option value="Comida">--Comida--</option>
                         <option value="Casa">--Casa--</option>
-                        <option value="Gastos varios">--Gastos Varios--</option>
+                        <option value="Gastos">--Gastos Varios--</option>
                         <option value="Ocio">--Ocio--</option>
                         <option value="Salud">--Salud--</option>
                         <option value="Suscripciones">--Suscripciones--</option>
@@ -85,7 +97,7 @@ const handleSubmit =(e)=>{
                 </div>
 
                 <input type="submit" 
-                       value='Añadir Gasto'/>
+                       value={gastoEditar.nombre ? 'Guardar cambios' : 'Añadir gasto'}/>
 
             {mensaje && <Mensaje tipoMensaje="error">{mensaje}</Mensaje>}
 

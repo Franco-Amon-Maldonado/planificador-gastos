@@ -1,3 +1,11 @@
+export const idGenerator = () =>{
+    const id = uuid.v4()
+    return id
+    
+}
+
+
+
 export const formatearFecha = (fecha) =>{
     const fechaFormateada = new Date(fecha)
 

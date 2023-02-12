@@ -1,7 +1,7 @@
 import Gasto from "./Gasto"
 
 
-const ListadoGastos = ({gastos})=> {
+const ListadoGastos = ({gastos, setGastoEditar,eliminarGasto})=> {
 
     return (
 
@@ -14,6 +14,8 @@ const ListadoGastos = ({gastos})=> {
                 
                     key={gasto.id}
                     gasto={gasto}
+                    setGastoEditar={setGastoEditar}
+                    eliminarGasto= {eliminarGasto}
                 />
 
             )
