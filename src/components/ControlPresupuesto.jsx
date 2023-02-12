@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css"
+import Swal from "sweetalert2";
+
 
 
 const ControlPresupuesto = ({presupuesto, gastos, setGastos, setPresupuesto,setIsValidPresupuesto}) =>{
@@ -51,12 +53,28 @@ const ControlPresupuesto = ({presupuesto, gastos, setGastos, setPresupuesto,setI
     }
 
     const handleResetear = () =>{
-        const confirmar = confirm('Desea reiniciar la app?')
-        if(confirmar){
+        
+        Swal.fire({
+            title: 'Desea resetear la aplicación?',
+            text: "Esta acción no se puede revertir",
+            icon: 'warning',
+            showCancelButton: true,
+            width: '50%',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Resetear!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                '¡Reseteado!'
+              )
             setGastos([])
             setPresupuesto(0)
             setIsValidPresupuesto(false)
-        }
+            }
+          })
+
+            
         
     }
 
