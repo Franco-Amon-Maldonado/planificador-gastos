@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import Filtro from './components/Filtro'
 import Header from './components/Header'
 import ListadoGastos from './components/ListadoGastos'
 import Modal from './components/Modal'
@@ -15,9 +16,13 @@ function App() {
   const [modal, setModal] = useState(false)
   const [animarModal, setAnimarModal] = useState(false)
 
-  const [gastos,setGastos] = useState([])
+  const [gastos,setGastos] = useState([...(JSON.parse(localStorage.getItem('gastos'))?? [])])
 
   const [gastoEditar, setGastoEditar] = useState({})
+
+  const[filtro,setFiltro] = useState('')
+
+  const [gastosFiltrados, setGastosFiltrados] = useState([])
 
   //Va a estar escuchando por los gastos a editar
   useEffect(()=>{
@@ -30,7 +35,7 @@ function App() {
     }
   },[gastoEditar])
 
-
+  //Local storage del presupuesto
   useEffect(()=>{
     localStorage.setItem('presupuesto', presupuesto ?? 0)
   },[presupuesto])
@@ -41,6 +46,19 @@ function App() {
       setIsValidPresupuesto(true)
     }
   },[])
+
+  //Local storage de los gastos
+  useEffect(()=>{
+    localStorage.setItem('gastos', JSON.stringify(gastos) ?? [])
+    setModal(false)
+  },[gastos])
+
+  useEffect(()=>{
+    if(filtro){
+      const gastosFiltrados = gastos.filter(gasto => gasto.categoria === filtro)
+      setGastosFiltrados(gastosFiltrados)
+    }
+  },[filtro])
 
   //Funcion para abrir el modal al presionar el boton nuevo gasto
   const handleNuevoGasto = () =>{
@@ -89,15 +107,22 @@ function App() {
         isValidPresupuesto = {isValidPresupuesto}
         setIsValidPresupuesto = {setIsValidPresupuesto}
         gastos={gastos}
+        setGastos={setGastos}
       />
 
       {isValidPresupuesto && 
         <>
         <main>
+          <Filtro
+            filtro={filtro}
+            setFiltro={setFiltro}
+          />
           <ListadoGastos
             gastos={gastos}
             setGastoEditar = {setGastoEditar}
             eliminarGasto= {eliminarGasto}
+            filtro={filtro}
+            gastosFiltrados={gastosFiltrados}
           />
         </main>
 
