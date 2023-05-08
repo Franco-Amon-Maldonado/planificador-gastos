@@ -83,7 +83,7 @@ const ControlPresupuesto = ({presupuesto, gastos, setGastos, setPresupuesto,setI
         <div className="contenedor-presupuesto contenedor sombra dos-columnas">
             <div>
                 <p>{<CircularProgressbar 
-                        text={porcentaje >= 100 ? 'Sin presupuesto' : `Gastado ${porcentaje}%`}
+                        text={porcentaje >= 100 ? 'Sin presupuesto' : `Gastado ${Math.round(porcentaje)}%`}
                         styles={buildStyles({
                             pathColor:colorProgressBar(porcentaje),
                               
